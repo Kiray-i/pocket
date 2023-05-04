@@ -8,3 +8,6 @@ build:
 
 run: build
 	./.bin/bot
+
+start:
+	go run cmd/bot/main.go

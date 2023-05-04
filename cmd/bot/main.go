@@ -1,37 +1,28 @@
 package main
 
 import (
-	"log"
 	"os"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/pushkariov/pocket/pkg/telegram"
+	"github.com/zhashkevych/go-pocket-sdk"
 )
 
-var apiKey = os.Getenv("TELEGRAM_KEY")
+var telegramToken = os.Getenv("TELEGRAM_KEY")
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI(apiKey)
+	pocketClient, err := pocket.NewClient("106603-d34dd30dc8bf1509e1fbbd1")
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 
-	bot.Debug = true
+	// db, err := bolt.Open("bot.db", 8600, nil)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	//log.Printf("Authorized on account %s", bot.Self.UserName)
-
-	updateConfig := tgbotapi.NewUpdate(0)
-	updateConfig.Timeout = 60
-
-	updates := bot.GetUpdatesChan(updateConfig)
-
-	for update := range updates {
-		if update.Message != nil { // If we got a message
-			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-			msg.ReplyToMessageID = update.Message.MessageID
-
-			bot.Send(msg)
-		}
+	telegeamBot := telegram.NewTelegramBot(telegramToken, pocketClient, "http://localhost")
+	if err := telegeamBot.StartBot(); err != nil {
+		panic(err)
 	}
+
 }
