@@ -9,24 +9,28 @@ import (
 	"github.com/pushkariov/pocket/pkg/storage"
 )
 
-type TokenRepository struct {
+// TokenStorage is a BoltDB token storage.
+type TokenStorage struct {
 	db *bolt.DB
 }
 
-func NewTokenRepository(db *bolt.DB) *TokenRepository {
-	return &TokenRepository{
+// NewTokenStorage creates a BoltDB token storage.
+func NewTokenStorage(db *bolt.DB) *TokenStorage {
+	return &TokenStorage{
 		db: db,
 	}
 }
 
-func (t *TokenRepository) Save(chatID int64, token string, bucket storage.Bucket) error {
+// SaveToken saves token in the storage.
+func (t *TokenStorage) SaveToken(chatID int64, token string, bucket storage.Bucket) error {
 	return t.db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucket))
 		return b.Put(intToBytes(chatID), []byte(token))
 	})
 }
 
-func (t *TokenRepository) Get(chatID int64, bucket storage.Bucket) (string, error) {
+// GetToken get token from storage.
+func (t *TokenStorage) GetToken(chatID int64, bucket storage.Bucket) (string, error) {
 	var token string
 
 	err := t.db.View(func(tx *bolt.Tx) error {

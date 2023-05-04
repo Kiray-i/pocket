@@ -7,15 +7,15 @@ import (
 	"github.com/zhashkevych/go-pocket-sdk"
 )
 
-// TelegramBot
-type TelegramBot struct {
+// PocketTelegramBot is a telegram bot for pocket.
+type PocketTelegramBot struct {
 	bot          *tgbotapi.BotAPI
 	pocketClient *pocket.Client
 	redirectURL  string
 }
 
-// NewTelegramBot creates telegram bot.
-func NewTelegramBot(telegramToken string, pocketClient *pocket.Client, redirectURL string) *TelegramBot {
+// NewPocketTelegramBot  creates telegram bot.
+func NewPocketTelegramBot(telegramToken string, pocketClient *pocket.Client, redirectURL string) *PocketTelegramBot {
 	bot, err := tgbotapi.NewBotAPI(telegramToken)
 	if err != nil {
 		panic(err)
@@ -23,15 +23,15 @@ func NewTelegramBot(telegramToken string, pocketClient *pocket.Client, redirectU
 
 	bot.Debug = true
 
-	return &TelegramBot{
+	return &PocketTelegramBot{
 		bot:          bot,
 		pocketClient: pocketClient,
 		redirectURL:  redirectURL,
 	}
 }
 
-// StartBot.
-func (t *TelegramBot) StartBot() error {
+// StartBot start bot.
+func (t *PocketTelegramBot) StartBot() error {
 	log.Printf("Authorized on account %s", t.bot.Self.UserName)
 
 	updates := t.initUpdatesChannel()
@@ -43,7 +43,7 @@ func (t *TelegramBot) StartBot() error {
 	return nil
 }
 
-func (t *TelegramBot) handleUpdates(updates tgbotapi.UpdatesChannel) error {
+func (t *PocketTelegramBot) handleUpdates(updates tgbotapi.UpdatesChannel) error {
 	for update := range updates {
 		if update.Message == nil {
 			continue
@@ -53,6 +53,7 @@ func (t *TelegramBot) handleUpdates(updates tgbotapi.UpdatesChannel) error {
 			if err := t.handleCommand(update.Message); err != nil {
 				return err
 			}
+
 			continue
 		}
 
@@ -62,7 +63,7 @@ func (t *TelegramBot) handleUpdates(updates tgbotapi.UpdatesChannel) error {
 	return nil
 }
 
-func (t *TelegramBot) initUpdatesChannel() tgbotapi.UpdatesChannel {
+func (t *PocketTelegramBot) initUpdatesChannel() tgbotapi.UpdatesChannel {
 	updateConfig := tgbotapi.NewUpdate(0)
 	updateConfig.Timeout = 60
 

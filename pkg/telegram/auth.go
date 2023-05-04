@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func (t *TelegramBot) generateAuthorizationLink(chatID int64) (string, error) {
+func (t *PocketTelegramBot) generateAuthorizationLink(chatID int64) (string, error) {
 	redirectURL := t.generateRedirectURL(chatID)
 
 	requestToken, err := t.pocketClient.GetRequestToken(context.Background(), redirectURL)
@@ -16,6 +16,6 @@ func (t *TelegramBot) generateAuthorizationLink(chatID int64) (string, error) {
 	return t.pocketClient.GetAuthorizationURL(requestToken, redirectURL)
 }
 
-func (t *TelegramBot) generateRedirectURL(chatID int64) string {
+func (t *PocketTelegramBot) generateRedirectURL(chatID int64) string {
 	return fmt.Sprintf("%s?chat_id=%d", t.redirectURL, chatID)
 }

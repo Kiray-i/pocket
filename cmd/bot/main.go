@@ -20,9 +20,8 @@ func main() {
 	// 	panic(err)
 	// }
 
-	telegeamBot := telegram.NewTelegramBot(telegramToken, pocketClient, "http://localhost")
+	telegeamBot := telegram.NewPocketTelegramBot(telegramToken, pocketClient, "http://localhost")
 	if err := telegeamBot.StartBot(); err != nil {
 		panic(err)
 	}
-
 }
