@@ -7,10 +7,10 @@ import (
 	"github.com/zhashkevych/go-pocket-sdk"
 )
 
-var telegramToken = os.Getenv("TELEGRAM_KEY")
+var telegramToken, pocketKey = os.Getenv("TELEGRAM_KEY"), os.Getenv("POCKET_KEY")
 
 func main() {
-	pocketClient, err := pocket.NewClient("106603-d34dd30dc8bf1509e1fbbd1")
+	pocketClient, err := pocket.NewClient(pocketKey)
 	if err != nil {
 		panic(err)
 	}
