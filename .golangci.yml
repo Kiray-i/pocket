@@ -52,7 +52,7 @@ linters-settings:
     # Allow leading comments to be separated with empty lines.
     allow-separated-leading-comment: false
   staticcheck:
-    go: "1.17"
+    go: "1.19"
     checks: ["all"]
   govet:
     # report about shadowed variables
