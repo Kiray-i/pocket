@@ -4,6 +4,7 @@ import (
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/pushkariov/pocket/pkg/storage"
 	"github.com/zhashkevych/go-pocket-sdk"
 )
 
@@ -11,11 +12,16 @@ import (
 type PocketTelegramBot struct {
 	bot          *tgbotapi.BotAPI
 	pocketClient *pocket.Client
+	tokenStorage storage.TokenStorage
 	redirectURL  string
 }
 
 // NewPocketTelegramBot  creates telegram bot.
-func NewPocketTelegramBot(telegramToken string, pocketClient *pocket.Client, redirectURL string) *PocketTelegramBot {
+func NewPocketTelegramBot(
+	telegramToken string,
+	pocketClient *pocket.Client,
+	tokenStorage storage.TokenStorage,
+	redirectURL string) *PocketTelegramBot {
 	bot, err := tgbotapi.NewBotAPI(telegramToken)
 	if err != nil {
 		panic(err)
@@ -26,6 +32,7 @@ func NewPocketTelegramBot(telegramToken string, pocketClient *pocket.Client, red
 	return &PocketTelegramBot{
 		bot:          bot,
 		pocketClient: pocketClient,
+		tokenStorage: tokenStorage,
 		redirectURL:  redirectURL,
 	}
 }

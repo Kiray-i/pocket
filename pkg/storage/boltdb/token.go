@@ -15,10 +15,25 @@ type TokenStorage struct {
 }
 
 // NewTokenStorage creates a BoltDB token storage.
-func NewTokenStorage(db *bolt.DB) *TokenStorage {
+func NewTokenStorage(db *bolt.DB) (*TokenStorage, error) {
+	if err := db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte(storage.AccessTokens))
+		if err != nil {
+			return fmt.Errorf("can't create bolt db bucket:%s", err)
+		}
+		_, err = tx.CreateBucketIfNotExists([]byte(storage.RequestTokens))
+		if err != nil {
+			return fmt.Errorf("can't create bolt db bucket:%s", err)
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
 	return &TokenStorage{
 		db: db,
-	}
+	}, nil
 }
 
 // SaveToken saves token in the storage.
